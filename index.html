@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Photo Magic - Krishna & Chandigarh</title>
+<style>
+body{margin:0;font-family:sans-serif;background:#fff7ed;text-align:center;padding:15px}
+.card{background:white;border-radius:20px;padding:20px;box-shadow:0 4px 15px rgba(0,0,0,0.1);margin-top:15px}
+button{width:100%;padding:15px;border:0;border-radius:12px;font-weight:bold;font-size:16px;margin:8px 0}
+.orange{background:linear-gradient(90deg,#f97316,#ea580c);color:white}
+.light{background:#fef3c7;border:2px solid #f97316;color:#92400e}
+img{max-width:100%;border-radius:15px;margin-top:15px}
+</style>
+</head>
+<body>
+<h1 style="color:#ea580c">✨ Photo Magic ✨</h1>
+<p>Krishna Look & Chandigarh Frame</p>
+<div class="card">
+<input type="file" id="file" accept="image/*">
+<canvas id="canvas" style="display:none"></canvas>
+<img id="preview" style="display:none">
+<p id="status">एक फोटो चुनो</p>
+<button class="orange" onclick="krishna()">🦚 Krishna Look Lagao</button>
+<button class="light" onclick="chandigarh()">🏙️ I Love Chandigarh</button>
+<button class="orange" onclick="downloadImg()">⬇️ Download Karo</button>
+</div>
+<script>
+let imgEl=document.getElementById('preview');
+let fileInput=document.getElementById('file');
+let canvas=document.getElementById('canvas');
+let ctx=canvas.getContext('2d');
+fileInput.addEventListener('change', e=>{
+  let file=e.target.files[0]; if(!file) return;
+  let r=new FileReader();
+  r.onload=ev=>{imgEl.src=ev.target.result;imgEl.style.display='block';document.getElementById('status').innerText='फोटो लग गई!';};
+  r.readAsDataURL(file);
+});
+function load(cb){
+  let im=new Image(); im.onload=()=>{canvas.width=im.width;canvas.height=im.height;ctx.drawImage(im,0,0);cb();imgEl.src=canvas.toDataURL();}; im.src=imgEl.src;
+}
+function krishna(){
+  load(()=>{
+    let d=ctx.getImageData(0,0,canvas.width,canvas.height); let a=d.data;
+    for(let i=0;i<a.length;i+=4){a[i]=Math.min(255,a[i]*1.15+25);a[i+1]=Math.min(255,a[i+1]+10);a[i+2]*=0.85;}
+    ctx.putImageData(d,0,0);
+    ctx.font=Math.floor(canvas.width/10)+'px serif'; ctx.fillText('🦚',20,80);
+    ctx.fillStyle='white'; ctx.strokeStyle='black'; ctx.lineWidth=3;
+    ctx.font='bold '+Math.floor(canvas.width/18)+'px sans-serif';
+    ctx.strokeText('Radhe Radhe ✨',20,canvas.height-30); ctx.fillText('Radhe Radhe ✨',20,canvas.height-30);
+  });
+}
+function chandigarh(){
+  load(()=>{
+    ctx.fillStyle='#ea580c'; ctx.fillRect(0,0,canvas.width,45); ctx.fillRect(0,canvas.height-65,canvas.width,65);
+    ctx.fillStyle='white'; ctx.font='bold '+Math.floor(canvas.width/14)+'px sans-serif';
+    ctx.fillText('I ❤️ CHANDIGARH',canvas.width*0.22,30); ctx.fillText('I ❤️ CHANDIGARH',canvas.width*0.22,canvas.height-22);
+  });
+}
+function downloadImg(){
+  let a=document.createElement('a'); a.download='photo-magic.png'; a.href=imgEl.src; a.click();
+}
+</script>
+</body>
+</html>
